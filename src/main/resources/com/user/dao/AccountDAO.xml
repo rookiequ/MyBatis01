@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.user.dao.AccountDAO">
+
+    <!-- 定义封装account和user之间的映射关系 -->
+    <resultMap id="accountUserMap" type="com.user.domain.Account">
+        <!-- 定义实体类和数据表的映射关系   这里的aid是数据库的列名，对应了sql里的as aid-->
+        <id property="id" column="aid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!-- 对应一对一映射关系 -->
+        <association property="user" column="uid" javaType="com.user.domain.User">
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="birthday" column="birthday"></result>
+            <result property="sex" column="sex"></result>
+            <result property="address" column="address"></result>
+        </association>
+    </resultMap>
+
+    <select id="findAccountWithUser" resultMap="accountUserMap">
+       <!-- select * from account   不知道哪里去取user信息,所以我们要配置映射关系  -->
+        select a.id as aid, a.money, u.* from account a, user u where a.uid = u.id
+    </select>
+</mapper>
